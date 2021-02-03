@@ -1,0 +1,112 @@
+---
+layout: post
+title: An Interactive Data Analysis on Tweets about Disaster
+tag: CS
+---
+
+![Forest Fire: Image Credits to Deep Rajwar](../images/photo-of-burning-forest-4621457.jpg "Forest Fire: Image Credits to Deep Rajwar")
+
+# Prelude
+Fake Information is bad, but more when it causes harm or confusion or both. Twitter has become an important communication channel in times of emergency.
+The ubiquitousness of smartphones enables people to announce an emergency they’re observing in real-time. Because of this, more agencies are interested in programmatically monitoring Twitter (i.e. disaster relief organizations and news agencies).
+
+In these blogs (this one and others), I will not show any code (unless very necessary), but only Visualizations and results. For the code, I have written detailed and documented code in the Kaggle Kernels / Jupyter Notebooks, I have linked [Here](https://www.kaggle.com/heyytanay/detecting-fake-tweets-with-plotly-bert).
+
+## Introduction
+Enough talking, let's get started with the cool stuff. Also, this blog will only focus on Exploratory Data Analysis and the other part will focus on Data Preprocessing (such as cleaning and tokenization)  
+
+## The Data & Visualization
+
+The dataset consists of 3 files;
+`train.csv`, `test.csv` and `sample_submission.csv`.
+As evident from the names, the train and testing files are used for their respective purposes while the 'sample_submission' file is used for submitting your results for kaggle scoreboards.
+
+Let's now take a look at some values from `train.csv` file.
+
+{% include data_table_25620.html %}
+
+### NuLL Values
+
+As you can see, some values in the column `keyword` and `location` are null. In-fact, **~1%** of the entries in `keyword` column are NULL (which is ~61 entries), while **~50%** of entries in `location` column are NULL (which is ~2533 entries).
+
+So, it is evident that `location` column will not be of much use since half of the values present there are NULL.
+
+Now, since we know that only `keyword` and `location` column have NULL values (and no other columns), we can easily visualize the NULL value distribution in those 2 columns 
+
+{% include nanvalsdist_25620.html %}
+
+### Target Values
+
+Ok, so that's the NULL values dealt with. Let us now visualize something which is much more important, i.e; Target Values.
+
+The `target` column in the dataset (only in the training set) is of utmost importance, as our complete purpose is to predict the `target` values from the given `text` data. 
+
+The `target` column consists of 2 possible values: **1** (It is a real disaster) or **0** (It is not a real disaster).
+
+However, as with most of real world datasets, the data is imbalanced.
+In this case, there are more entries of *Non-disaster tweets* than there are of *Disaster Tweets*. This generally created problem when training the model (we'll get to that later).
+
+Let's now visualize it;
+
+{% include targetvalsdist_25620.html %}
+
+As you can see, there are about **43%** tweets that are *Real Disaster Ones* and about **57%** tweets that aren't.
+
+### Character Count
+
+Let us now count and visualize individual characters in the training data.
+As you can see below, there are two charts (one for *Disaster* and the other one for *Non-Disaster* tweets).
+
+
+{% include charcountdist_25620.html %}
+
+Note: By Characters, I mean every single character (whether alpha-numeric or not, since the data isn't cleaned yet).
+
+### Word Count Distribution
+
+Let us look at how words frequency distribution looks like. Here, we count every individual word (can be non-unique, i.e: same).
+
+{% include wordcountdist_25620.html %}
+
+As seen from the chart, quite a few samples in *Disaster Category* seem to have a word count in range 11-18, while in *Non-Disaster Category* it's about 9-17.
+
+This actually gives us an insight about how Tweets that are about a real disaster have less words (those tweets are smaller in length) while the other non-disaster (or fake-disaster) tweets are relatively bigger in size and words.
+
+This behavior can be explained as a person experiencing a disaster won't go about writing bigger sentences (or paragraphs), but would rather write the news in a concise manner. 
+
+Subtle but important observations like these are the reason why **Exploratory Data Analysis** is very important, as it gives us an insight into the data and the domain.
+
+### Average Word Lenth Distribution
+
+Let's now shift our attention to average word length distribution. This distribution tells us about how average length varies in both categories (Disaster and Non-Disaster tweets) of the training and testing dataset.
+
+{% include avgwordlendist_25620.html %}
+
+We can now clearly verify the above stated fact that Disaster tweets are shorter than non-disaster tweets by looking at the average lengths of both of them.
+
+As you can see, the average length of a disaster tweet is slightly larger than that of a non-disaster tweet. 
+
+Without the context, this can be easily discarded as just a coincidence or maybe noise in data, but the numbers speak for themselves.
+
+### Unique Word Count Distribution
+
+Let us now look at the distribution of Unique words in the dataset. This can also prove out to be a defining factor in determining the validity of a tweet.
+
+{% include unqwordcountdist_25620.html %}
+
+### URL Count
+
+Finally, let's take a look at the URL Count Distribution in the dataset for both categories
+
+{% include urlcountdist_25620.html %}
+
+
+## Final Notes
+This marks the ending of our data analysis and visualization journey. In the next part, We will fine-tune a BERT Model for Classification on this dataset.
+
+You can find the link for the Kaggle Notebook [here](https://www.kaggle.com/heyytanay/detecting-fake-tweets-with-plotly-bert). 
+
+I hope you liked my analysis, if you found out any mistake or error, please message me about it as it will take a while to set-up a comment section!
+
+
+--Tanay Mehta

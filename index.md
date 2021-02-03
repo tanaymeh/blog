@@ -1,4 +1,4 @@
 ---
-layout: home
+layout: post-list
 title: Articles
 ---
