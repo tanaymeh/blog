@@ -57,8 +57,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  jekyll (~> 3.3)
+  jekyll (~> 3.8.7)
   jekyll-theme-kagami (~> 0.1.12)
 
 BUNDLED WITH
-   1.17.2
+   2.7.0

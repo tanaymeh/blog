@@ -1,3 +1,7 @@
+code{
+  font-family: 'Fira Mono', monospace;
+}
+
 @font-face {
   font-family: 'fontello';
   src: url('../font/fontello.eot?48874071');

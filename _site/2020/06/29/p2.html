@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Graduate Admissions Data Analysis and prediction - Tanay&#39;s Blog</title>
+  <meta name="description" content="">
+
+  
+  <link rel="stylesheet" href="/assets/styles/core.css?v=20210203103323">
+  <link rel="stylesheet" href="/assets/styles/fontello.css?v=20210203103323">
+  <link rel="stylesheet" href="/assets/styles/highlighting/default.css?v=20210203103323">
+
+  <link rel="canonical" href="http://localhost:4000/2020/06/29/p2.html">
+  <link rel="alternate" type="application/rss+xml" title="Tanay&#39;s Blog" href="/feed.xml">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap" rel="stylesheet">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <style>.MathJax_ExBox { font-family: serif; }</style>
+  
+
+  
+</head>
+
+  <body>
+
+  <main class="page-content" aria-label="Content">
+    <div class="wrapper">
+      <article class="post" lang="en" itemscope itemtype="http://schema.org/BlogPosting" >
+
+  <header class="post-header">
+  <a class="site-title" href="/">Tanay&#39;s Blog</a>
+  <h1 class="post-title" itemprop="name headline">Graduate Admissions Data Analysis and prediction</h1>
+</header>
+
+
+
+
+  <div class="post-content" itemprop="articleBody">
+    <p><img src="../../../images/blog_2_cover.jpg" alt="College Graduation: Image Credits to Pixabay" title="College Graduation: Image Credits to Pixabay" /></p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>In the last few years, the number of students opting for a Graduate Degree (also called a Master’s Degree) has seen an increase. Whether it be for further education, better career options, immigrating to other countries and even research, the number increases as new opportunities and prospects keep opening.</p>
+
+<p>As someone who personally is preparing for Graduate level studies, I thought it would’be a good idea to do some analysis on the same.</p>
+
+<p>For this purpose, I found an excellent dataset on Kaggle: <a href="https://www.kaggle.com/mohansacharya/graduate-admissions">Graduate Admission 2</a> (For Citation, jump to end of the article).</p>
+
+<p>This dataset is created for prediction of Graduate Admissions from an Indian perspective. But even if you are not an Indian, it would still hold true as most of the colleges in Europe and USA have slim to none reservations/changes when viewing student applications based on their country of origin.</p>
+
+<p><strong>Note: I have not shown full code for any analysis here, If you want to see the code, here is the  <a href="https://www.kaggle.com/heyytanay/college-admission-analysis-eda-models">Notebook I made</a>.</strong></p>
+
+<h2 id="data">Data</h2>
+<p>The dataset is fairly small, consisting of ~500 entries, none of them being NULL/NaN. The Dataset consists of 9-columns, out of which only 8 are actually useful (as Column: <code class="highlighter-rouge">Serial No</code> has no significance)</p>
+
+<p>The Feature <code class="highlighter-rouge">Chance of Admit</code> has the probability of a certain student getting selected at a University/College.</p>
+
+<p>Our task for today is to analyze the relationship between various features and with the <code class="highlighter-rouge">Chance of Admit</code> column. We will also build a Simple Linear Regression Model. <strong>Remember</strong>, this is a regression task as we have to predict the probability of being admitted to a college which is a continuous (ex: 0.1% to 100%, with every possible value in between) and not discrete (ex: 1,2,3, etc just some finite number of values).</p>
+
+<p>You can take a look at the data below;</p>
+
+<p><img src="../../../images/datahead_car.png" alt="First Five Values in the Data" /></p>
+
+<p>Here is a quick overview of the features;</p>
+
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/Graduate_Record_Examinations">GRE</a> Scores (out of 340)</li>
+  <li><a href="https://en.wikipedia.org/wiki/Test_of_English_as_a_Foreign_Language">TOEFL</a> Scores (out of 120)</li>
+  <li>University Rating (out of 5)</li>
+  <li><a href="https://www.quora.com/What-is-SOP-and-LOR-and-how-to-build-it-more-effectively#:~:text=k%20answer%20views-,SOP%20is%20Statement%20of%20Purpose%20and%20LOR%20is%20Letter%20Of,motivated%20to%20complete%20the%20program.">Statement of Purpose (SOP) and Letter of Recommendation (LOR)</a> Strength (out of 5)</li>
+  <li>Undergraduate GPA (out of 10)</li>
+  <li>Research Experience (either 0 or 1)</li>
+  <li>Chance of Admit (ranging from 0 to 1)</li>
+</ul>
+
+<h2 id="data-visualization">Data Visualization</h2>
+<p>Now that we know what the data looks like, it would be a good time to start understanding and visualizing it.</p>
+
+<h4 id="descriptive-statistic-of-data">Descriptive Statistic of Data</h4>
+<p>A descriptive statistic is a summary statistic that quantitatively describes or summarizes features from a dataset.</p>
+
+<p>We can get a lot of information from the descriptive statistic of the dataset such as it’s mean, median, minimum, maximum. 25%, 50% and 75% Quantiles.</p>
+
+<p><em>Pssh! What is this Quantile thingy?</em>: Yeah, Watch this video:</p>
+
+<p><a href="https://www.youtube.com/watch?v=IFKQLDmRK0Y" title="Understand Percentiles"><img src="http://img.youtube.com/vi/IFKQLDmRK0Y/0.jpg" alt="Understand Percentiles" /></a></p>
+
+<p>Otherwise, I will be explaining what %-Quantiles (Percentiles) mean in this context down below.</p>
+
+<p><img src="../../../images/descr_car.png" alt="Descriptive of the Data" /></p>
+
+<p>We have observed a few things from the description above;</p>
+
+<ul>
+  <li>Students in this dataset had a minimum chance of <strong>34%</strong> and a maximum of <strong>97%</strong> of getting selected</li>
+  <li><em>75%</em> of students had less than <strong>82%</strong> chances of getting selected.</li>
+  <li><em>50%</em> of students in the data had less than <strong>72%</strong> chances of getting selected.</li>
+  <li>On an average a student had <strong>8.5</strong> GPA (out of a maximum 10). In this, 75% of all students have less than 9.0 GPA and 50% of the students have less than 8.5 GPA.</li>
+  <li>Also, the minimum present GPA present is <strong>6.8</strong> and the maximum present is <strong>9.9</strong></li>
+  <li>SOP, LOR and University Rating Descriptives are fairly straight forward and you can take a look at them yourself below</li>
+  <li>Maximum TOEFL Score is <strong>120</strong> and minimum is <strong>92</strong>. Of this, <em>75%</em> of all students have less than 112 score in TOEFL and 50% of the students have less than 107 score. On an average the student has 107 score.</li>
+  <li>Maximum GRE Score is <strong>340</strong> and minimum is <strong>290</strong>. Of this, <em>75%</em> of all students have less than 325 score in GRE and 50% of the students have less than 317 score. On an average the student has 316 score.</li>
+</ul>
+
+<p>In the above points I have described the concept of percentiles and you didn’t even noticed! Let’s take the first point as the example. The <em>75th</em> Percentile of the Chances of Getting Selected is <em>0.82</em>. 
+<strong>What that means is that 75% of all the entries in the dataset has less than 82% chance (also written as 0.82) of getting selected</strong>. If you still haven’t understood it, I recommend going to the above provided video to understand it better.</p>
+
+<p>If you read the above points carefully and tried to make sense of it, you will have a very clear image of the dataset and how many students actually get selected among other things.</p>
+
+<p>But that isn’t all, in-fact the most important thing is yet to come.</p>
+
+<h4 id="heatmap-of-feature-correlation">Heatmap of Feature Correlation</h4>
+
+<p>A heatmap in this context is basically a visualization that tell us about the correlation between all the different features in the data.</p>
+
+<p><em>What is correlation?</em>: In the simplest sense, Correlation between two variables tells us how are they related to each other (you can also say, how they affect each other).</p>
+
+<p>For example, If 2 variables x and y have a correlation coefficient of 1, then x proportional y (if x increases, so does y).
+If they have a correlation of -1, then they are negatively proportional to each other. (if x increases, y would decrease).</p>
+
+<p>So here is the heatmap of the correlation of features;</p>
+
+<p><img src="../../../images/heatmap_adm.png" alt="Heatmap of Correlation" /></p>
+
+<p>A few questions you might have:</p>
+
+<ol>
+  <li>Why are the diagonal values all 1?: It’s simple, a variable x would always have a correlation of 1 with itself. In other words, you would be 100% like yourself, right?</li>
+  <li>What is the color scheme suggesting?: In the heatmap, if 2 variables are less correlated, they have their cell more darker and vice-versa.</li>
+</ol>
+
+<p>If you still don’t understand a Heatmap, don’t worry. Just look at the few very important observations below;</p>
+
+<p><strong>CGPA has a correlation coefficient of 0.88 meaning that CGPA is the most correlated to Chances of Getting Selected at a college (sorry, 7 GPA gang 😭).</strong></p>
+
+<p><strong>On the other hand, Research is the least correlated to Chances of getting Selected with a coefficient of 0.55</strong>.</p>
+
+<p>In-fact, we can arrange all the features in descending order of their importance to getting selected.</p>
+
+<p>Here is what that looks like:</p>
+
+<p><img src="../../../images/order_car.png" alt="Order of Feature Importance" /></p>
+
+<p>As you can now see, <code class="highlighter-rouge">CGPA</code>, <code class="highlighter-rouge">GRE Score</code> and <code class="highlighter-rouge">TOEFL Score</code> are the three most important features that gives more probability that a candidate will get selected.</p>
+
+<h4 id="pairplot-of-data">Pairplot of Data</h4>
+<p>Finally, let’s also make a pairplot of the dataset.
+A pairplot is a just a bunch of plots that shows the relation between every pair of variables (basically the plots of all the combinations of the data features).</p>
+
+<p><img src="../../../images/pairplot_adm.png" alt="Pairplot of the Dataset" /></p>
+
+<p>If you don’t undertand what this is, don’t worry, it’ll start making sense to you once you start practicing data science.</p>
+
+<h2 id="modelling-and-training">Modelling and Training</h2>
+<p>Now that the Data Visualization is over, let’s quickly compare 2 approaches to make a Linear Regression Model I used.</p>
+
+<h4 id="splitting-the-data">Splitting the Data</h4>
+
+<p>I have split the complete data into 4 parts;
+x_train, y_train, x_val, y_val.</p>
+
+<p>Both train ones are used for training the model and the val ones are used for testing the model.</p>
+
+<p>The val ones have about 5% of the total data.</p>
+
+<h4 id="approaches">Approaches</h4>
+
+<ol>
+  <li>
+    <p>I used PyTorch to make a custom Linear Regression model by defining everything and specifying each step before hand. This approach is good when you have complex model architecture to implement and no-external support from any library can be found.
+Here is a quick glimpse of that;
+<img src="../../../images/model_car.png" alt="Model Arch and Hyperparamters" /></p>
+  </li>
+  <li>
+    <p>In the second approach, I used the scikit-learn class <code class="highlighter-rouge">LinearRegression</code> for training the model.</p>
+  </li>
+</ol>
+
+<h4 id="training">Training</h4>
+
+<p>In the PyTorch approach, after training for 15K epochs, my Loss Graph looked like this;</p>
+
+<p><img src="../../../images/loss_plot.png" alt="Loss over the epochs" /></p>
+
+<h4 id="validation-accuracy">Validation Accuracy</h4>
+<p>Since the PyTorch approach used everything custom, I have implemented R<sup>2</sup> Accuracy.</p>
+
+<p><img src="../../../images/acc_car.png" alt="R2 Accuracy" /></p>
+
+<p>R<sup>2</sup> accuracy already is available as a function in the scikit-learn library, so I just used it.</p>
+
+<p>Comparing Validation accuracy from both approaches;</p>
+
+<table>
+    <tr>
+        <th>Approach</th>
+        <th>Accuracy</th>
+    </tr>
+    <tr>
+        <td>PyTorch</td>
+        <td><i>91.43%</i></td>
+    </tr>
+    <tr>
+        <td>Scikit-learn</td>
+        <td><i>91.87%</i></td>
+    </tr>
+</table>
+
+<p>As you can see there isn’t a lot of difference but there you have it.</p>
+
+<p>For more technical details on how I did the above things, see the notebook <a href="https://www.kaggle.com/heyytanay/college-admission-analysis-eda-models">here</a>.</p>
+
+<h1 id="conclusion">Conclusion</h1>
+<p>From this study we can conclude a few things;</p>
+
+<ul>
+  <li><code class="highlighter-rouge">CGPA</code>, <code class="highlighter-rouge">GRE Scores</code> and <code class="highlighter-rouge">TOEFL Scores</code> are most important for you to get selected at a good graduate school (at-least that’s what the dataset suggested)</li>
+  <li><code class="highlighter-rouge">Research</code> is not as much important for getting selected. I’m not saying it’s completely useless, but more like a low-priority.</li>
+  <li>Statistics is cool af.</li>
+</ul>
+
+<p>Please keep in mind that all the observations and conclusions are based on the dataset I used, and so the reality may differ but the observations from this very dataset will not (or so I think).</p>
+
+<p>Citation: <strong>Mohan S Acharya, Asfia Armaan, Aneeta S Antony : A Comparison of Regression Models for Prediction of Graduate Admissions, IEEE International Conference on Computational Intelligence in Data Science 2019</strong></p>
+
+<p>Finally, I would like to end this article here. I hope you found it insightful. 
+I am new to Machine Learning and Data Science in General and so If you found any mistakes/wrong assumptions and assertions, please correct them by messaging me on any of the social media platforms (Links at the footer).</p>
+
+<p>–Tanay Mehta</p>
+
+  </div>
+
+  
+
+
+  <footer class="post-footer">
+    <div class="post-meta">
+       <time datetime="2020-06-29T00:00:00+05:30" itemprop="datePublished">Jun 29, 2020</time> 
+      
+    </div>
+
+    
+    <ul class="post-tags" aria-label="TagList">
+      
+      <li><a class="tag-link" href="/tags/CS">CS</a></li>
+      
+    </ul>
+    
+  </footer>
+
+  
+</article>
+
+    </div>
+    <script type="text/javascript">
+  (function () {
+    var resize = function () {
+      this.width = 0.5 * (this.naturalWidth || this.width);
+    }
+    Array.prototype.forEach.call(document.querySelectorAll(".half-size, .retina2x"), function(el) {
+      if (el.naturalWidth) {
+        resize.call(el);
+      } else {
+        el.onload = resize;
+      }
+    });
+  })();
+</script>
+
+  </main>
+
+  <footer class="site-footer">
+
+  <div class="wrapper">
+    <!-- <div class="social-links">
+      <a class="social-link social-github" href="https://github.com/heytanay">
+        <i class="icon-github"></i>
+      </a> -->
+    <div class="social-links">
+      <a class="social-link social-github" href="https://github.com/heytanay">
+        <i class="icon-github"></i>
+      </a>
+      <a class="social-link social-twitter" href="https://twitter.com/heyytanay">
+        <i class="icon-twitter"></i>
+      </a>
+      <a class="social-link social-linkedin" href="https://www.linkedin.com/in/tanaymehta28/">
+        <i class="icon-linkedin"></i>
+      </a>
+      <a class="social-link social-rss" href="/feed.xml" target="_blank">
+        <i class="icon-rss"></i>
+      </a>
+    </div>
+    <div class="credits">
+      Tanay's Blog, with <i class="icon-heart"></i>
+    </div>
+  </div>
+
+</footer>
+
+
+</body>
+
+</html>

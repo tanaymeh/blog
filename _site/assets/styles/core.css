@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap");
 /*
 * Scut, a collection of Sass utilities
 * to ease and improve our implementations of common style-code patterns.
@@ -485,3 +486,6 @@ article hr {
   margin-left: -2px; }
 [lang^="zh"] h3 {
   margin-left: -2px; }
+
+code {
+  font-family: 'Fira Mono', monospace; }

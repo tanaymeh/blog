@@ -1,16 +1,13 @@
-title: Blog
+title: Tanay's Blog
 author: heytanay
 email: heyytanay@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  My new Blog.
+  My new Blog
 # baseurl: "/jekyll-theme-kagami"
 lang: en # site language (en/ja/zh-Hans/zh-Hant)
-color_scheme: monokai #github #manni # this specifies color scheme for syntax highlighting
+color_scheme: default # this specifies color scheme for syntax highlighting
 github_username: heytanay
 twitter_username: heyytanay
-# instagram_username: xinqiu_bot
-# google_analytics: UA-57881840-1
-# disqus_shortname: xinqiu
 
 # Build settings
 markdown: kramdown
