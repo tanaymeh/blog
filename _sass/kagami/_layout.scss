@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap');
 $content-padding: $spacing-unit / 2;
 $post-margin-width: 2 * $spacing-unit;
 $post-header-spacing: 3.5 * $spacing-unit;
@@ -48,6 +49,7 @@ article {
     code {
       display: block;
       overflow-x: auto;
+      font-family: 'Fira Mono', monospace;
     }
 
     @include exdent-horizontally($hspacing);
