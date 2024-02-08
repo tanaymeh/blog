@@ -9,5 +9,5 @@ cover_meta: >
   Photo by [Amador Loureiro](https://unsplash.com/@amadorloureiroblanco)
 ---
 
-Hey! This is Tanay Mehta's Blog!
+Hey! This is Tanay's Blog!
 
