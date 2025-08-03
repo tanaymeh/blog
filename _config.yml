@@ -8,7 +8,6 @@ color_scheme: default # this specifies color scheme for syntax highlighting
 github_username: tanaymeh
 twitter_username: serious_mehta
 
-# theme: tanaymeh/jekyll-theme-kagami
 remote_theme: tanaymeh/jekyll-theme-kagami   # or kamikat/… if you prefer
 plugins: [jekyll-remote-theme]               # good practice but optional
 
