@@ -1,18 +1,20 @@
 title: Tanay's Blog
-author: heytanay
+author: tanaymeh
 email: heyytanay@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  My new Blog
-# baseurl: "/jekyll-theme-kagami"
+  Tanay's Blog
 lang: en # site language (en/ja/zh-Hans/zh-Hant)
 color_scheme: default # this specifies color scheme for syntax highlighting
-github_username: heytanay
-twitter_username: heyytanay
+github_username: tanaymeh
+twitter_username: serious_mehta
+
+# theme: tanaymeh/jekyll-theme-kagami
+remote_theme: tanaymeh/jekyll-theme-kagami   # or kamikat/… if you prefer
+plugins: [jekyll-remote-theme]               # good practice but optional
 
 # Build settings
 markdown: kramdown
 mathjax: true
-# theme: jekyll-theme-kagami
 exclude:
   - Gemfile
   - Gemfile.lock
