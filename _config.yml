@@ -17,3 +17,6 @@ mathjax: true
 exclude:
   - Gemfile
   - Gemfile.lock
+  - draft
+  - .blog-editor
+  - editor

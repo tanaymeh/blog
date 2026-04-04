@@ -1,0 +1,497 @@
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Fira+Mono:wght@400;500&display=swap");
+
+:root {
+  color-scheme: light;
+  --paper: #f6f0e3;
+  --paper-strong: #fffaf0;
+  --ink: #2c241a;
+  --ink-soft: #6e6252;
+  --line: rgba(44, 36, 26, 0.12);
+  --accent: #8d4f22;
+  --accent-strong: #6f3d1a;
+  --accent-soft: rgba(141, 79, 34, 0.12);
+  --danger: #8a2d1f;
+  --success: #285739;
+  --warning: #8d6b20;
+  --shadow: 0 20px 45px rgba(44, 36, 26, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(141, 79, 34, 0.1), transparent 28%),
+    linear-gradient(180deg, #f9f4ea, #f1eadc);
+  font-family: "Crimson Text", serif;
+  overflow: hidden;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+.sidebar {
+  border-right: 1px solid var(--line);
+  background: rgba(255, 250, 240, 0.86);
+  backdrop-filter: blur(12px);
+  padding: 24px 20px;
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sidebar-header,
+.toolbar,
+.panel-header,
+.log-header,
+.sidebar-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sidebar-header {
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--ink-soft);
+  font-family: "Fira Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.sidebar h1 {
+  font-size: 36px;
+}
+
+.sidebar-status {
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.status-pill {
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(44, 36, 26, 0.08);
+  color: var(--ink);
+  font-family: "Fira Mono", monospace;
+  font-size: 12px;
+}
+
+.status-ready {
+  background: rgba(40, 87, 57, 0.12);
+  color: var(--success);
+}
+
+.status-error {
+  background: rgba(138, 45, 31, 0.12);
+  color: var(--danger);
+}
+
+.status-starting,
+.status-dirty {
+  background: rgba(141, 107, 32, 0.14);
+  color: var(--warning);
+}
+
+.post-list {
+  display: grid;
+  flex: 1;
+  gap: 12px;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.post-card {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  padding: 16px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.6);
+  transition: border-color 120ms ease, transform 120ms ease, background 120ms ease;
+}
+
+.post-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(141, 79, 34, 0.22);
+}
+
+.post-card.active {
+  border-color: rgba(141, 79, 34, 0.44);
+  background: rgba(141, 79, 34, 0.08);
+}
+
+.post-card-title,
+.post-card-meta,
+.post-card-excerpt {
+  display: block;
+}
+
+.post-card-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.post-card-meta {
+  color: var(--ink-soft);
+  font-family: "Fira Mono", monospace;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.post-card-excerpt,
+.toolbar-subtitle,
+.panel-header p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.workspace {
+  padding: 28px;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.toolbar {
+  margin-bottom: 18px;
+  padding: 18px 22px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: rgba(255, 250, 240, 0.82);
+  box-shadow: var(--shadow);
+}
+
+.toolbar h2 {
+  font-size: 38px;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.primary-button,
+.secondary-button {
+  border-radius: 999px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+}
+
+.primary-button {
+  color: #fffaf0;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+}
+
+.secondary-button {
+  color: var(--ink);
+  background: rgba(44, 36, 26, 0.05);
+}
+
+.editor-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.editor-panel,
+.preview-panel {
+  min-height: 0;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: rgba(255, 250, 240, 0.86);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 20px 22px 14px;
+  border-bottom: 1px solid var(--line);
+  align-items: flex-end;
+}
+
+.panel-header h3 {
+  font-size: 28px;
+}
+
+.editor-panel-body,
+.preview-panel-body {
+  flex: 1;
+  min-height: 0;
+}
+
+.editor-panel-body {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.editor-form,
+.preview-panel-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-form {
+  flex: 1;
+  min-height: 0;
+}
+
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 18px 22px 12px;
+}
+
+.metadata-span {
+  grid-column: 1 / -1;
+}
+
+label span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+  font-family: "Fira Mono", monospace;
+  font-size: 12px;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid rgba(44, 36, 26, 0.14);
+  border-radius: 14px;
+  padding: 10px 12px;
+  background: var(--paper-strong);
+  color: var(--ink);
+}
+
+.advanced-frontmatter {
+  display: block;
+  padding: 0 22px 16px;
+}
+
+.advanced-frontmatter textarea {
+  min-height: 110px;
+  resize: vertical;
+  font-family: "Fira Mono", monospace;
+  font-size: 13px;
+}
+
+.editor-surface {
+  flex: 1;
+  min-height: 320px;
+  padding: 0 22px 22px;
+  display: flex;
+  overflow: hidden;
+}
+
+.editor-surface > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.editor-surface .cm-editor {
+  flex: 1;
+  width: 100%;
+  min-height: 320px;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(44, 36, 26, 0.14);
+}
+
+.editor-surface .cm-scroller,
+.editor-surface .cm-content {
+  min-height: 100%;
+  font-family: "Fira Mono", monospace;
+  font-size: 14px;
+}
+
+.editor-surface .cm-placeholder {
+  color: rgba(110, 98, 82, 0.7);
+  font-style: italic;
+}
+
+.preview-frame-shell {
+  flex: 1;
+  min-height: 0;
+  padding: 16px 18px 18px;
+  overflow: hidden;
+}
+
+.preview-frame {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 1px solid rgba(44, 36, 26, 0.12);
+  border-radius: 22px;
+  background: #fff;
+}
+
+.log-panel {
+  border-top: 1px solid var(--line);
+  padding: 14px 18px 18px;
+}
+
+.log-header {
+  margin-bottom: 0;
+  color: var(--ink-soft);
+  font-family: "Fira Mono", monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.log-panel summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.log-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.log-panel summary::after {
+  content: "Show";
+  margin-left: auto;
+  color: var(--accent);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.log-panel[open] .log-header {
+  margin-bottom: 8px;
+}
+
+.log-panel[open] summary::after {
+  content: "Hide";
+}
+
+.log-panel pre {
+  margin: 0;
+  max-height: 160px;
+  overflow: auto;
+  border-radius: 18px;
+  padding: 14px;
+  background: rgba(44, 36, 26, 0.06);
+  font-family: "Fira Mono", monospace;
+  font-size: 12px;
+}
+
+.banner,
+.panel-empty,
+.empty-state {
+  border-radius: 18px;
+  padding: 12px 14px;
+}
+
+.banner {
+  margin-bottom: 12px;
+}
+
+.banner-error {
+  background: rgba(138, 45, 31, 0.12);
+  color: var(--danger);
+}
+
+.banner-success {
+  background: rgba(40, 87, 57, 0.12);
+  color: var(--success);
+}
+
+.banner-warning {
+  background: rgba(141, 107, 32, 0.14);
+  color: var(--warning);
+}
+
+.panel-empty,
+.empty-state {
+  margin: 20px;
+  background: rgba(44, 36, 26, 0.05);
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+@media (max-width: 1200px) {
+  .app-shell {
+    grid-template-columns: 280px minmax(0, 1fr);
+  }
+
+  .editor-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(240px, 0.7fr) minmax(0, 1fr);
+  }
+
+  .sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .workspace {
+    padding: 18px;
+  }
+
+  .toolbar,
+  .sidebar-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .toolbar h2 {
+    font-size: 30px;
+  }
+
+  .metadata-grid {
+    grid-template-columns: 1fr;
+  }
+}

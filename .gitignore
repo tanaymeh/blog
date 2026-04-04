@@ -1,0 +1,5 @@
+.blog-editor/
+editor/build/
+editor/dist/
+editor/node_modules/
+editor/.vite/
