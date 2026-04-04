@@ -4,8 +4,9 @@ import { existsSync } from "node:fs";
 import cors from "cors";
 import express from "express";
 
-import { DraftInput } from "../shared/types";
+import { DiscardPostResult, DraftInput } from "../shared/types";
 import { HttpError } from "./errors";
+import { GitService } from "./git-service";
 import { PostService } from "./post-service";
 import { PreviewManager } from "./preview-manager";
 
@@ -15,6 +16,7 @@ const clientDist = path.join(editorRoot, "dist");
 
 const postService = new PostService(repoRoot);
 const previewManager = new PreviewManager(repoRoot);
+const gitService = new GitService(repoRoot);
 
 const app = express();
 const port = 4321;
@@ -54,6 +56,55 @@ app.put("/api/posts/:id", async (req, res) => {
 
 app.delete("/api/posts/:id", async (req, res) => {
   res.json(await postService.deletePost(req.params.id));
+});
+
+app.post("/api/posts/:id/discard", async (req, res) => {
+  const documentId = req.params.id;
+  const relativePath = postService.getRelativePath(documentId);
+  const restoreResult = await gitService.discardPathToUpstream(relativePath);
+  const document = (await postService.hasPost(documentId)) ? await postService.getPost(documentId) : null;
+
+  const response: DiscardPostResult = {
+    document,
+    removed: document === null,
+    cancelledPendingPublish: restoreResult.cancelledPendingPublish,
+  };
+
+  res.json(response);
+});
+
+app.post("/api/publish", async (req, res) => {
+  const saved = await postService.publishPost(req.body as DraftInput);
+  const transaction = await gitService.createPublishTransaction(
+    await postService.collectPublishPaths(saved.draft, (req.body as DraftInput).sourceId),
+    `blog(editor): publish ${saved.summary.slug}`,
+  );
+
+  res.status(201).json({
+    document: saved,
+    transaction,
+  });
+});
+
+app.get("/api/publish", (_req, res) => {
+  res.json({ transactions: gitService.listTransactions() });
+});
+
+app.put("/api/publish/:id", async (req, res) => {
+  const payload = req.body as { commitMessage?: string };
+  res.json(await gitService.updateTransactionMessage(req.params.id, payload.commitMessage ?? ""));
+});
+
+app.post("/api/publish/:id/push", async (req, res) => {
+  res.json(await gitService.pushTransaction(req.params.id));
+});
+
+app.post("/api/publish/:id/cancel", async (req, res) => {
+  res.json(await gitService.cancelTransaction(req.params.id));
+});
+
+app.post("/api/publish/:id/keep", async (req, res) => {
+  res.json(await gitService.keepTransaction(req.params.id));
 });
 
 app.post("/api/preview/sessions", async (_req, res) => {

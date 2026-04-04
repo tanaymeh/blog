@@ -43,6 +43,11 @@ textarea {
   font: inherit;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
 .app-shell {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
@@ -100,6 +105,29 @@ h3 {
 .sidebar-status {
   margin-bottom: 18px;
   flex-wrap: wrap;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  border: 1px solid rgba(44, 36, 26, 0.12);
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--ink-soft);
+  font-family: "Fira Mono", monospace;
+  font-size: 12px;
+}
+
+.filter-chip.active {
+  border-color: rgba(141, 79, 34, 0.32);
+  background: rgba(141, 79, 34, 0.12);
+  color: var(--accent-strong);
 }
 
 .status-pill {
@@ -162,10 +190,23 @@ h3 {
   display: block;
 }
 
+.post-card-header,
+.toolbar-meta,
+.modal-meta,
+.modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.post-card-header {
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
 .post-card-title {
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 4px;
 }
 
 .post-card-meta {
@@ -180,6 +221,20 @@ h3 {
 .panel-header p {
   margin: 0;
   color: var(--ink-soft);
+}
+
+.post-status {
+  white-space: nowrap;
+}
+
+.post-status-draft {
+  background: rgba(141, 107, 32, 0.14);
+  color: var(--warning);
+}
+
+.post-status-published {
+  background: rgba(40, 87, 57, 0.12);
+  color: var(--success);
 }
 
 .workspace {
@@ -204,10 +259,16 @@ h3 {
   font-size: 38px;
 }
 
+.toolbar-meta {
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
 .toolbar-actions {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .primary-button,
@@ -225,6 +286,13 @@ h3 {
 .secondary-button {
   color: var(--ink);
   background: rgba(44, 36, 26, 0.05);
+}
+
+.primary-button:hover,
+.secondary-button:hover,
+.filter-chip:hover,
+.post-card:hover {
+  cursor: pointer;
 }
 
 .editor-grid {
@@ -277,8 +345,8 @@ h3 {
 }
 
 .editor-form {
-  flex: 1;
-  min-height: 0;
+  flex: 0 0 auto;
+  min-height: 100%;
 }
 
 .metadata-grid {
@@ -323,11 +391,11 @@ textarea {
 }
 
 .editor-surface {
-  flex: 1;
+  flex: 0 0 auto;
   min-height: 320px;
   padding: 0 22px 22px;
   display: flex;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .editor-surface > * {
@@ -336,16 +404,19 @@ textarea {
 }
 
 .editor-surface .cm-editor {
-  flex: 1;
   width: 100%;
   min-height: 320px;
+  height: auto;
   border-radius: 22px;
-  overflow: hidden;
   border: 1px solid rgba(44, 36, 26, 0.14);
 }
 
-.editor-surface .cm-scroller,
-.editor-surface .cm-content {
+.editor-surface .cm-scroller {
+  overflow: visible;
+}
+
+.editor-surface .cm-content,
+.editor-surface .cm-gutters {
   min-height: 100%;
   font-family: "Fira Mono", monospace;
   font-size: 14px;
@@ -432,6 +503,23 @@ textarea {
   margin-bottom: 12px;
 }
 
+.banner-copy,
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.banner-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.banner-actions {
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
 .banner-error {
   background: rgba(138, 45, 31, 0.12);
   color: var(--danger);
@@ -447,12 +535,87 @@ textarea {
   color: var(--warning);
 }
 
+.banner-publish {
+  background: rgba(141, 79, 34, 0.12);
+  color: var(--accent-strong);
+}
+
+.banner code {
+  font-family: "Fira Mono", monospace;
+  font-size: 13px;
+}
+
 .panel-empty,
 .empty-state {
   margin: 20px;
   background: rgba(44, 36, 26, 0.05);
   color: var(--ink-soft);
   text-align: center;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(44, 36, 26, 0.34);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 30;
+}
+
+.modal-card {
+  width: min(560px, 100%);
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  padding: 24px;
+  background: rgba(255, 250, 240, 0.98);
+  box-shadow: var(--shadow);
+}
+
+.modal-card h3 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.modal-copy {
+  margin: 0 0 16px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+.modal-copy code,
+.modal-meta strong {
+  font-family: "Fira Mono", monospace;
+  font-size: 13px;
+}
+
+.modal-meta {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.modal-meta > div {
+  border: 1px solid rgba(44, 36, 26, 0.1);
+  border-radius: 18px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.modal-meta span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--ink-soft);
+  font-family: "Fira Mono", monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.modal-actions {
+  justify-content: flex-end;
+  margin-top: 18px;
 }
 
 @media (max-width: 1200px) {
@@ -485,6 +648,11 @@ textarea {
   .sidebar-header {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .toolbar-actions,
+  .modal-actions {
+    width: 100%;
   }
 
   .toolbar h2 {

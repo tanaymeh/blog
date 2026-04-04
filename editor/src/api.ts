@@ -1,4 +1,13 @@
-import { DeletedPostInfo, DraftInput, PostDocument, PostSummary, PreviewSessionInfo } from "../shared/types";
+import {
+  DiscardPostResult,
+  DeletedPostInfo,
+  DraftInput,
+  PostDocument,
+  PostSummary,
+  PreviewSessionInfo,
+  PublishResult,
+  PublishTransactionInfo,
+} from "../shared/types";
 
 async function request<T>(input: RequestInfo, init?: RequestInit): Promise<T> {
   const response = await fetch(input, {
@@ -43,6 +52,41 @@ export const api = {
   async deletePost(id: string) {
     return request<DeletedPostInfo>(`/api/posts/${encodeURIComponent(id)}`, {
       method: "DELETE",
+    });
+  },
+  async discardPost(id: string) {
+    return request<DiscardPostResult>(`/api/posts/${encodeURIComponent(id)}/discard`, {
+      method: "POST",
+    });
+  },
+  async publishPost(draft: DraftInput) {
+    return request<PublishResult>("/api/publish", {
+      method: "POST",
+      body: JSON.stringify(draft),
+    });
+  },
+  async listPendingPublishes() {
+    return request<{ transactions: PublishTransactionInfo[] }>("/api/publish");
+  },
+  async updatePublish(transactionId: string, commitMessage: string) {
+    return request<PublishTransactionInfo>(`/api/publish/${encodeURIComponent(transactionId)}`, {
+      method: "PUT",
+      body: JSON.stringify({ commitMessage }),
+    });
+  },
+  async pushPublish(transactionId: string) {
+    return request<PublishTransactionInfo>(`/api/publish/${encodeURIComponent(transactionId)}/push`, {
+      method: "POST",
+    });
+  },
+  async cancelPublish(transactionId: string) {
+    return request<PublishTransactionInfo>(`/api/publish/${encodeURIComponent(transactionId)}/cancel`, {
+      method: "POST",
+    });
+  },
+  async keepPublish(transactionId: string) {
+    return request<PublishTransactionInfo>(`/api/publish/${encodeURIComponent(transactionId)}/keep`, {
+      method: "POST",
     });
   },
   async createPreviewSession() {

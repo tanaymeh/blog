@@ -14,7 +14,8 @@ interface PreviewSession {
   hostPort: number | null;
   child: ChildProcess;
   state: PreviewState;
-  activeFileName: string | null;
+  activeSourceId: string | null;
+  activeOverlayId: string | null;
   previewPath: string | null;
   lastError: string | null;
   recentLogs: string[];
@@ -52,7 +53,7 @@ export class PreviewManager {
         "jekyll/jekyll:pages",
         "sh",
         "-lc",
-        "if ! gem list -i webrick >/dev/null 2>&1; then gem install webrick -N >/dev/null; fi && jekyll serve --host 0.0.0.0 --port 4000 --incremental --force_polling --future --trace",
+        "if ! gem list -i webrick >/dev/null 2>&1; then gem install webrick -N >/dev/null; fi && jekyll serve --host 0.0.0.0 --port 4000 --incremental --force_polling --future --drafts --trace",
       ],
       {
         stdio: ["ignore", "pipe", "pipe"],
@@ -66,7 +67,8 @@ export class PreviewManager {
       hostPort: null,
       child,
       state: "starting",
-      activeFileName: null,
+      activeSourceId: null,
+      activeOverlayId: null,
       previewPath: null,
       lastError: null,
       recentLogs: [],
@@ -89,16 +91,25 @@ export class PreviewManager {
   async updateSession(sessionId: string, draft: DraftInput, postService: PostService) {
     const session = this.getSession(sessionId);
     const materialized = postService.materializeDraft(draft, { allowUntitled: true });
-    const postsDir = path.join(session.workspaceRoot, "_posts");
 
-    if (session.activeFileName && session.activeFileName !== materialized.fileName) {
-      await postService.copySourcePostTo(postsDir, session.activeFileName);
+    if (session.activeSourceId) {
+      await postService.syncSourceDocumentToWorkspace(session.workspaceRoot, session.activeSourceId);
     }
 
-    await fs.mkdir(postsDir, { recursive: true });
-    await fs.writeFile(path.join(postsDir, materialized.fileName), materialized.content, "utf8");
+    if (session.activeOverlayId && session.activeOverlayId !== session.activeSourceId) {
+      await postService.removeDocumentFromWorkspace(session.workspaceRoot, session.activeOverlayId);
+    }
 
-    session.activeFileName = materialized.fileName;
+    if (draft.sourceId && draft.sourceId !== materialized.id) {
+      await postService.removeDocumentFromWorkspace(session.workspaceRoot, draft.sourceId);
+    }
+
+    const workspaceTargetPath = path.join(session.workspaceRoot, materialized.relativePath);
+    await fs.mkdir(path.dirname(workspaceTargetPath), { recursive: true });
+    await fs.writeFile(workspaceTargetPath, materialized.content, "utf8");
+
+    session.activeSourceId = draft.sourceId;
+    session.activeOverlayId = materialized.id;
     session.previewPath = materialized.previewPath;
     session.lastError = null;
 

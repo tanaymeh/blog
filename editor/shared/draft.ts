@@ -1,6 +1,9 @@
 import slugify from "slugify";
 
+import type { PostStatus } from "./types";
+
 const POST_FILE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})-(.+)\.md$/;
+const DRAFT_FILE_PATTERN = /^(.+)\.md$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 export function normalizeSlug(slug: string, title = ""): string {
@@ -22,14 +25,10 @@ export function isValidPostDate(date: string): boolean {
   return !Number.isNaN(parsed.getTime()) && parsed.toISOString().startsWith(date);
 }
 
-export function derivePostIdentity(date: string, slug: string, title = "") {
+export function derivePreviewPath(date: string, slug: string, title = "") {
   const normalizedSlug = normalizeSlug(slug, title);
   const fileName = `${date}-${normalizedSlug}.md`;
-  return {
-    slug: normalizedSlug,
-    fileName,
-    previewPath: toPreviewPath(fileName),
-  };
+  return toPreviewPath(fileName);
 }
 
 export function toPreviewPath(fileName: string): string {
@@ -42,7 +41,53 @@ export function toPreviewPath(fileName: string): string {
   return `/${match[1]}/${match[2]}/${match[3]}/${match[4]}.html`;
 }
 
-export function parsePostFileName(fileName: string) {
+export function deriveDocumentIdentity(status: PostStatus, date: string, slug: string, title = "") {
+  const normalizedSlug = normalizeSlug(slug, title);
+  const fileName = status === "draft" ? `${normalizedSlug}.md` : `${date}-${normalizedSlug}.md`;
+  return {
+    id: toDocumentId(status, fileName),
+    status,
+    slug: normalizedSlug,
+    fileName,
+    relativePath: toRelativePath(status, fileName),
+    previewPath: derivePreviewPath(date, normalizedSlug),
+  };
+}
+
+export function toDocumentId(status: PostStatus, fileName: string) {
+  return `${status}:${fileName}`;
+}
+
+export function parseDocumentId(documentId: string) {
+  const separatorIndex = documentId.indexOf(":");
+
+  if (separatorIndex <= 0) {
+    throw new Error(`Invalid document id: ${documentId}`);
+  }
+
+  const status = documentId.slice(0, separatorIndex);
+  const fileName = documentId.slice(separatorIndex + 1);
+
+  if (status !== "draft" && status !== "published") {
+    throw new Error(`Invalid document status: ${status}`);
+  }
+
+  if (!fileName.endsWith(".md")) {
+    throw new Error(`Invalid document file name: ${fileName}`);
+  }
+
+  return {
+    status,
+    fileName,
+    relativePath: toRelativePath(status, fileName),
+  } as const;
+}
+
+export function toRelativePath(status: PostStatus, fileName: string) {
+  return `${status === "draft" ? "_drafts" : "_posts"}/${fileName}`;
+}
+
+export function parsePublishedFileName(fileName: string) {
   const match = POST_FILE_PATTERN.exec(fileName);
 
   if (!match) {
@@ -52,5 +97,17 @@ export function parsePostFileName(fileName: string) {
   return {
     date: `${match[1]}-${match[2]}-${match[3]}`,
     slug: match[4],
+  };
+}
+
+export function parseDraftFileName(fileName: string) {
+  const match = DRAFT_FILE_PATTERN.exec(fileName);
+
+  if (!match) {
+    throw new Error(`Invalid draft file name: ${fileName}`);
+  }
+
+  return {
+    slug: match[1],
   };
 }
