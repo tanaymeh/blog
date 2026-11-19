@@ -20,6 +20,10 @@
   --accent: #ff8355;
   --on-accent: #10110f;
   --scrollbar: #666b5b;
+  --scan-dot: #ffb08a8f;
+  --scan-glow: #ff83551a;
+  --scan-edge: #ffd0b8;
+  --theme-sweep: 740ms cubic-bezier(.35,.15,.55,.95);
   --display: "Space Grotesk", system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", Consolas, monospace;
   --gutter: clamp(1rem, 4vw, 4rem);
@@ -40,6 +44,8 @@
   --accent: #a03918;
   --on-accent: #fffaf5;
   --scrollbar: #778070;
+  --scan-dot: #a039187a;
+  --scan-edge: #a03918;
 }
 
 *, *::before, *::after {
@@ -56,6 +62,71 @@ body {
   background: var(--canvas);
   color: var(--text);
   font: 1rem/1.65 system-ui, sans-serif;
+}
+
+.theme-scan {
+  position: fixed;
+  z-index: 1;
+  inset: 0 0 auto;
+  height: clamp(8rem, 24vh, 15rem);
+  border-bottom: 2px solid var(--scan-edge);
+  background:
+    linear-gradient(transparent 15%, var(--scan-glow)),
+    radial-gradient(circle, var(--scan-dot) 1px, transparent 1.35px) 0 0 / 16px 16px;
+  mask-image: linear-gradient(transparent, #000 72%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.theme-wipe .theme-scan {
+  view-transition-name: theme-scan;
+}
+
+.theme-scan.theme-scan-visible, .theme-scan.theme-scan-fallback {
+  opacity: 1;
+}
+
+.theme-scan-fallback {
+  animation: theme-sweep var(--theme-sweep) both;
+}
+
+:root.theme-wipe::view-transition {
+  pointer-events: none;
+}
+
+:root.theme-wipe::view-transition-group(root),
+:root.theme-wipe::view-transition-old(root),
+:root.theme-wipe::view-transition-old(theme-scan),
+:root.theme-wipe::view-transition-new(theme-scan) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+:root.theme-wipe::view-transition-old(theme-scan) {
+  visibility: hidden;
+}
+
+:root.theme-wipe::view-transition-new(root) {
+  animation: theme-reveal var(--theme-sweep) both;
+  mix-blend-mode: normal;
+}
+
+:root.theme-wipe::view-transition-group(theme-scan) {
+  z-index: 1;
+  animation: theme-sweep var(--theme-sweep) both;
+}
+
+@keyframes theme-reveal {
+  from { clip-path: inset(0 0 100%); }
+  to { clip-path: inset(0); }
+}
+
+@keyframes theme-sweep {
+  from { transform: translateY(-100%); }
+  to {
+    transform: translateY(calc(100vh - 100%));
+    transform: translateY(calc(100dvh - 100%));
+  }
 }
 
 ::selection {

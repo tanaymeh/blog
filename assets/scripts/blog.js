@@ -3,12 +3,14 @@
   const themeButton = document.querySelector(".theme-toggle");
   const themeLabel = themeButton.querySelector(".theme-state");
   const themeColor = document.querySelector('meta[name="theme-color"]');
+  const scan = document.querySelector(".theme-scan");
   const systemLight = matchMedia("(prefers-color-scheme: light)");
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const themeKey = "portfolio-theme";
   let preference;
+  let cancelMotion;
 
-  function setTheme(value) {
-    preference = value === "light" || value === "dark" ? value : null;
+  function renderTheme() {
     const light = (preference || (systemLight.matches ? "light" : "dark")) === "light";
     root.dataset.theme = light ? "light" : "dark";
     themeColor.content = light ? "#edeee6" : "#10110f";
@@ -17,17 +19,73 @@
     themeLabel.textContent = light ? "Light" : "Dark";
   }
 
+  function finishMotion() {
+    const cancel = cancelMotion;
+    cancelMotion = undefined;
+    cancel?.();
+    renderTheme();
+  }
+
+  function playThemeMotion() {
+    if (!document.startViewTransition) {
+      scan.addEventListener("animationend", finishMotion);
+      scan.classList.add("theme-scan-fallback");
+      cancelMotion = () => {
+        scan.removeEventListener("animationend", finishMotion);
+        scan.classList.remove("theme-scan-fallback");
+      };
+      return;
+    }
+
+    root.classList.add("theme-wipe");
+    const transition = document.startViewTransition(() => {
+      if (cancelMotion !== cancel) return;
+      renderTheme();
+      scan.classList.add("theme-scan-visible");
+    });
+
+    function clearWipe() {
+      root.classList.remove("theme-wipe");
+      scan.classList.remove("theme-scan-visible");
+    }
+
+    function cancel() {
+      transition.skipTransition();
+      clearWipe();
+    }
+
+    function finish() {
+      if (cancelMotion !== cancel) return;
+      cancelMotion = undefined;
+      clearWipe();
+    }
+
+    cancelMotion = cancel;
+    transition.ready.catch(() => {}); // The theme is still applied if the browser skips the animation.
+    transition.finished.then(finish, finish);
+  }
+
+  function setTheme(value, animate = false) {
+    preference = value === "light" || value === "dark" ? value : null;
+    if (animate && !cancelMotion && !reduceMotion.matches) playThemeMotion();
+    else finishMotion();
+  }
+
   try { preference = localStorage.getItem(themeKey); } catch {}
   setTheme(preference);
   themeButton.hidden = false;
 
   themeButton.addEventListener("click", () => {
-    setTheme(root.dataset.theme === "light" ? "dark" : "light");
+    setTheme((preference || root.dataset.theme) === "light" ? "dark" : "light", true);
     try { localStorage.setItem(themeKey, preference); } catch {}
   });
 
   systemLight.addEventListener("change", () => {
     if (!preference) setTheme(null);
+  });
+
+  reduceMotion.addEventListener("change", () => {
+    if (reduceMotion.matches && cancelMotion) finishMotion();
   });
 
   window.addEventListener("storage", (event) => {
