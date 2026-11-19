@@ -1,0 +1,23 @@
+---
+layout: default
+---
+<article class="post" lang="{{ page.lang | default: site.lang | default: 'en' }}" itemscope itemtype="https://schema.org/BlogPosting">
+  {% include header.html %}
+  <div class="post-content" itemprop="articleBody">{{ content }}</div>
+
+  <footer class="post-footer">
+    <a class="back-link" href="{{ '/' | relative_url }}"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 10H3.75m5-5-5 5 5 5"/></svg> All posts</a>
+    {% if page.tags.size > 0 %}
+      <ul class="post-tags" aria-label="Topics">
+        {% for tag in page.tags %}
+          {% assign topic = site.pages | where: 'navtitle', tag | first %}
+          <li>{% if topic %}<a class="tag-link" href="{{ topic.url | relative_url }}">{{ tag | escape }}</a>{% else %}{{ tag | escape }}{% endif %}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </footer>
+
+  {% if jekyll.environment == 'production' and page.comments != false and site.disqus_shortname %}
+    {% include disqus.html %}
+  {% endif %}
+</article>

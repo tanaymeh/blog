@@ -1,17 +1,15 @@
----
-layout: blank
----
-<body id="top">
-  <a class="skip-link" href="#main">Skip to content</a>
-  {% include site-nav.html %}
+<!doctype html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+  {% include head.html %}
+  <body id="top">
+    <a class="skip-link" href="#main">Skip to content</a>
+    {% include site-nav.html %}
 
-  <main class="page-content wrap" id="main" tabindex="-1">
-    {{ content }}
-    {% include retina-image.html %}
-    {% if site.mermaid or page.mermaid %}
-      {% include mermaid.html %}
-    {% endif %}
-  </main>
+    <main class="page-content wrap" id="main" tabindex="-1">
+      {{ content }}
+      {% include retina-image.html %}
+    </main>
 
-  {% include footer.html %}
-</body>
+    {% include footer.html %}
+  </body>
+</html>

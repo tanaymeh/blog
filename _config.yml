@@ -2,17 +2,14 @@ title: Tanay's Blog
 author: tanaymeh
 email: heyytanay@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  Tanay's Blog
+  Notes on machine learning, data systems, and CUDA.
 lang: en # site language (en/ja/zh-Hans/zh-Hant)
-color_scheme: native # this specifies color scheme for syntax highlighting
 github_username: tanaymeh
 twitter_username: serious_mehta
 
-remote_theme: tanaymeh/jekyll-theme-kagami   # or kamikat/… if you prefer
-plugins: [jekyll-remote-theme]               # good practice but optional
-
 # Build settings
 markdown: kramdown
+highlighter: rouge
 mathjax: true
 exclude:
   - Gemfile

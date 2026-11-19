@@ -27,27 +27,27 @@ layout: default
   {% if posts.size > 0 %}
     <ul class="article-list" role="list">
       {% for post in posts %}
-        {% assign language = post.lang | default: site.lang | default: 'en' %}
-        {% assign post_text = post.content | strip_html %}
-        {% if language == 'en' %}
-          {% assign words = post_text | number_of_words %}
-        {% else %}
-          {% assign words = post_text | size %}
-        {% endif %}
+        {% assign summary = post.summary | default: post.description %}
+        {% unless summary %}
+          {% assign summary = post.excerpt | strip_html | normalize_whitespace | truncate: 250 %}
+        {% endunless %}
         <li>
-          <a class="article-row" href="{{ post.url | relative_url }}">
-            <time class="article-date" datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%b %-d, %Y' }}</time>
-            <span class="article-title">
-              {{ post.title | escape }}
-              {% if post.description %}<span class="article-description">{{ post.description | escape }}</span>{% endif %}
-            </span>
-            <span class="reading-time">{{ words | plus: 250 | divided_by: 250 }} min read</span>
+          <a class="article-row{% if forloop.first and page.url == '/' %} article-row-latest{% endif %}"
+             href="{{ post.url | relative_url }}" aria-labelledby="article-{{ forloop.index }}">
+            <div class="article-metadata">
+              <time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%b %-d, %Y' }}</time>
+              <span>{% include reading-time.html post=post %}</span>
+            </div>
+            <div class="article-copy">
+              <h2 class="article-title" id="article-{{ forloop.index }}">{{ post.title | escape }}</h2>
+              {% if summary and summary != '' %}<p class="article-description">{{ summary | escape_once }}</p>{% endif %}
+            </div>
             <svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M3.5 10h12.75m-5-5 5 5-5 5"/></svg>
           </a>
         </li>
       {% endfor %}
     </ul>
   {% else %}
-    <p class="article-empty">There are no articles in this section yet. <a href="{{ '/' | relative_url }}">View all articles</a>.</p>
+    <p class="article-empty">There are no articles in this section yet. <a href="{{ '/' | relative_url }}">View all posts</a>.</p>
   {% endif %}
 </section>

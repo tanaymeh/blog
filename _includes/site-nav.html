@@ -1,7 +1,17 @@
 <header class="site-header wrap">
-  <a class="monogram" href="{{ '/' | relative_url }}" aria-label="{{ site.title | escape }}, home">TM</a>
+  <div class="site-controls">
+    <a class="monogram" href="{{ '/' | relative_url }}" aria-label="{{ site.title | escape }}, home">TM</a>
+    <button class="theme-toggle" type="button" aria-label="Light theme" aria-pressed="false" hidden>
+      <svg class="icon theme-icon" viewBox="0 0 20 20" aria-hidden="true">
+        <rect x="2.5" y="4" width="15" height="12" rx="1"/>
+        <path d="m5.5 8 2 2-2 2M9.5 12h1.75"/>
+        <path class="theme-icon-pane" d="M13 4.75h3.75v10.5H13z"/>
+      </svg>
+      <span class="theme-state" aria-hidden="true">Dark</span>
+    </button>
+  </div>
   <nav class="site-nav" aria-label="Main navigation">
-    <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>Articles</a>
+    <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>All posts</a>
     {% assign pages = site.pages | where_exp: 'item', 'item.navlevel == "header"' | sort: 'position' %}
     {% for item in pages %}
       <a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.navtitle | default: item.title | escape }}</a>

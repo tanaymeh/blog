@@ -1,0 +1,8 @@
+{%- assign language = include.post.lang | default: site.lang | default: 'en' -%}
+{%- assign post_text = include.post.content | strip_html -%}
+{%- if language == 'en' -%}
+  {%- assign units = post_text | number_of_words -%}
+{%- else -%}
+  {%- assign units = post_text | size -%}
+{%- endif -%}
+{{- units | plus: 249 | divided_by: 250 | at_least: 1 }} min read
