@@ -1,13 +1,15 @@
 <header class="post-header">
-  <a class="site-title" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
-  <h1 class="post-title" itemprop="name headline">{{ page.title | escape | replace: "​", "<wbr>" }}</h1>
+  <h1 id="page-title" class="post-title" itemprop="name headline">{{ page.title | escape | replace: '​', '<wbr>' }}</h1>
+  {% if page.date %}
+    <p class="post-date"><time datetime="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: '%B %-d, %Y' }}</time></p>
+  {% elsif page.url == '/' %}
+    <p class="index-description">Notes on machine learning, data systems, and CUDA.</p>
+  {% endif %}
 </header>
 
 {% if page.cover_url %}
-<div class="post-cover" aria-label="Cover">
-  <div class="post-cover-wrapper">
-    <img src="{{ page.cover_url }}" alt="" />
-  </div>
-  <div class="cover-meta">{{ page.cover_meta | markdownify }}</div>
-</div>
+  <figure class="post-cover">
+    <img src="{{ page.cover_url | escape }}" alt="">
+    {% if page.cover_meta %}<figcaption class="cover-meta">{{ page.cover_meta | markdownify }}</figcaption>{% endif %}
+  </figure>
 {% endif %}

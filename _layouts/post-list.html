@@ -1,0 +1,53 @@
+---
+layout: default
+---
+<section class="article-index" aria-labelledby="page-title">
+  {% include header.html %}
+
+  {% assign posts = site.posts %}
+  {% if page.filter %}
+    {% assign paths = '' | split: '' %}
+    {% for rule in page.filter %}
+      {% assign matches = site.posts %}
+      {% if rule.by_tag %}
+        {% assign matches = matches | where_exp: 'post', 'post.tags contains rule.by_tag' %}
+      {% endif %}
+      {% if rule.by_category %}
+        {% assign matches = matches | where_exp: 'post', 'post.category == rule.by_category' %}
+      {% endif %}
+      {% if rule.by_expression %}
+        {% assign matches = matches | where_exp: 'post', rule.by_expression %}
+      {% endif %}
+      {% assign matches = matches | map: 'path' %}
+      {% assign paths = paths | concat: matches %}
+    {% endfor %}
+    {% assign posts = posts | where_exp: 'post', 'paths contains post.path' %}
+  {% endif %}
+
+  {% if posts.size > 0 %}
+    <ul class="article-list" role="list">
+      {% for post in posts %}
+        {% assign language = post.lang | default: site.lang | default: 'en' %}
+        {% assign post_text = post.content | strip_html %}
+        {% if language == 'en' %}
+          {% assign words = post_text | number_of_words %}
+        {% else %}
+          {% assign words = post_text | size %}
+        {% endif %}
+        <li>
+          <a class="article-row" href="{{ post.url | relative_url }}">
+            <time class="article-date" datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%b %-d, %Y' }}</time>
+            <span class="article-title">
+              {{ post.title | escape }}
+              {% if post.description %}<span class="article-description">{{ post.description | escape }}</span>{% endif %}
+            </span>
+            <span class="reading-time">{{ words | plus: 250 | divided_by: 250 }} min read</span>
+            <svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M3.5 10h12.75m-5-5 5 5-5 5"/></svg>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="article-empty">There are no articles in this section yet. <a href="{{ '/' | relative_url }}">View all articles</a>.</p>
+  {% endif %}
+</section>
