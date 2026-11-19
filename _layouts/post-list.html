@@ -4,35 +4,15 @@ layout: default
 <section class="article-index" aria-labelledby="page-title">
   {% include header.html %}
 
-  {% assign posts = site.posts %}
-  {% if page.filter %}
-    {% assign paths = '' | split: '' %}
-    {% for rule in page.filter %}
-      {% assign matches = site.posts %}
-      {% if rule.by_tag %}
-        {% assign matches = matches | where_exp: 'post', 'post.tags contains rule.by_tag' %}
-      {% endif %}
-      {% if rule.by_category %}
-        {% assign matches = matches | where_exp: 'post', 'post.category == rule.by_category' %}
-      {% endif %}
-      {% if rule.by_expression %}
-        {% assign matches = matches | where_exp: 'post', rule.by_expression %}
-      {% endif %}
-      {% assign matches = matches | map: 'path' %}
-      {% assign paths = paths | concat: matches %}
-    {% endfor %}
-    {% assign posts = posts | where_exp: 'post', 'paths contains post.path' %}
-  {% endif %}
-
-  {% if posts.size > 0 %}
+  {% if site.posts.size > 0 %}
     <ul class="article-list" role="list">
-      {% for post in posts %}
+      {% for post in site.posts %}
         {% assign summary = post.summary | default: post.description %}
         {% unless summary %}
           {% assign summary = post.excerpt | strip_html | normalize_whitespace | truncate: 250 %}
         {% endunless %}
         <li>
-          <a class="article-row{% if forloop.first and page.url == '/' %} article-row-latest{% endif %}"
+          <a class="article-row{% if forloop.first %} article-row-latest{% endif %}"
              href="{{ post.url | relative_url }}" aria-labelledby="article-{{ forloop.index }}">
             <div class="article-metadata">
               <time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%b %-d, %Y' }}</time>
@@ -48,6 +28,6 @@ layout: default
       {% endfor %}
     </ul>
   {% else %}
-    <p class="article-empty">There are no articles in this section yet. <a href="{{ '/' | relative_url }}">View all posts</a>.</p>
+    <p class="article-empty">No posts have been published yet.</p>
   {% endif %}
 </section>

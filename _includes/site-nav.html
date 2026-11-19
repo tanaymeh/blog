@@ -12,10 +12,6 @@
   </div>
   <nav class="site-nav" aria-label="Main navigation">
     <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>All posts</a>
-    {% assign pages = site.pages | where_exp: 'item', 'item.navlevel == "header"' | sort: 'position' %}
-    {% for item in pages %}
-      <a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.navtitle | default: item.title | escape }}</a>
-    {% endfor %}
     <a class="portfolio-link" href="https://www.tanaymehta.com/">Portfolio <svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M6 5h9v9"/></svg></a>
   </nav>
 </header>
