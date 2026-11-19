@@ -1,17 +1,18 @@
-name: Build & Deploy (Kagami)
+name: Build and deploy blog
 
 on:
+  pull_request:
+    branches: [gh-pages]
   push:
-    branches: [ "gh-pages" ]           # change if your default branch differs
+    branches: [gh-pages]
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
+  pages: read
 
 concurrency:
-  group: "pages"
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -25,18 +26,24 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Build with Jekyll
-        uses: actions/jekyll-build-pages@v1    # pre-bundled github-pages gem
+        uses: actions/jekyll-build-pages@v1
         with:
-          verbose: true                       # nicer logs; optional
+          verbose: true
 
       - name: Upload artifact
+        if: github.ref == 'refs/heads/gh-pages'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./_site
 
   deploy:
+    if: github.ref == 'refs/heads/gh-pages'
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

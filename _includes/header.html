@@ -1,13 +1,22 @@
 <header class="post-header">
-  <a class="site-title" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
-  <h1 class="post-title" itemprop="name headline">{{ page.title | escape | replace: "​", "<wbr>" }}</h1>
+  {% if page.layout == 'post' %}
+    <a class="back-link" href="{{ '/' | relative_url }}"><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 10H3.75m5-5-5 5 5 5"/></svg> All posts</a>
+  {% endif %}
+  <h1 id="page-title" class="post-title" itemprop="name headline">{{ page.title | escape | replace: '​', '<wbr>' }}</h1>
+  {% if page.date %}
+    <div class="post-metadata">
+      <time datetime="{{ page.date | date: '%Y-%m-%d' }}" itemprop="datePublished">{{ page.date | date: '%B %-d, %Y' }}</time>
+      {% if page.author %}<span itemprop="author">{{ page.author | escape }}</span>{% endif %}
+    </div>
+    {% if page.summary %}<p class="post-deck" itemprop="description">{{ page.summary | escape_once }}</p>{% endif %}
+  {% elsif page.layout == 'post-list' and page.description %}
+    <p class="index-description">{{ page.description | escape }}</p>
+  {% endif %}
 </header>
 
 {% if page.cover_url %}
-<div class="post-cover" aria-label="Cover">
-  <div class="post-cover-wrapper">
-    <img src="{{ page.cover_url }}" alt="" />
-  </div>
-  <div class="cover-meta">{{ page.cover_meta | markdownify }}</div>
-</div>
+  <figure class="post-cover">
+    <img src="{{ page.cover_url | escape }}" alt="{{ page.cover_alt | default: '' | escape }}">
+    {% if page.cover_meta %}<figcaption class="cover-meta">{{ page.cover_meta | markdownify }}</figcaption>{% endif %}
+  </figure>
 {% endif %}

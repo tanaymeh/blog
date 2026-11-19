@@ -1,6 +1,17 @@
-<nav class="site-nav">
-  {% assign sorted_pages = site.pages | where_exp: "page", "page.navlevel == 'header'" | sort: "position" %}
-  {% for my_page in sorted_pages %}
-  <a class="page-link" href="{{ my_page.url | relative_url }}" >{{ my_page.navtitle | default: my_page.title | escape }}</a>
-  {% endfor %}
-</nav>
+<header class="site-header wrap">
+  <div class="site-controls">
+    <a class="monogram" href="{{ '/' | relative_url }}" aria-label="{{ site.title | escape }}, home">TM</a>
+    <button class="theme-toggle" type="button" aria-label="Light theme" aria-pressed="false" hidden>
+      <svg class="icon theme-icon" viewBox="0 0 20 20" aria-hidden="true">
+        <rect x="2.5" y="4" width="15" height="12" rx="1"/>
+        <path d="m5.5 8 2 2-2 2M9.5 12h1.75"/>
+        <path class="theme-icon-pane" d="M13 4.75h3.75v10.5H13z"/>
+      </svg>
+      <span class="theme-state" aria-hidden="true">Dark</span>
+    </button>
+  </div>
+  <nav class="site-nav" aria-label="Main navigation">
+    <a href="{{ '/' | relative_url }}"{% if page.url == '/' %} aria-current="page"{% endif %}>All posts</a>
+    <a class="portfolio-link" href="https://www.tanaymehta.com/">Portfolio <svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 15 15 5M6 5h9v9"/></svg></a>
+  </nav>
+</header>

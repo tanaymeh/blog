@@ -1,0 +1,410 @@
+:root {
+  --code-bg: #11130f;
+  --code-chrome: #1b1e17;
+  --code-comment: #a1ab99;
+  --code-keyword: #ffa187;
+  --code-string: #bdd599;
+  --code-number: #f3cd84;
+  --code-function: #a7cde4;
+  --code-type: #d6b9e8;
+  --code-deleted: #ffc1ae;
+  --code-deleted-bg: #40231c;
+  --code-inserted-bg: #26321c;
+}
+
+:root[data-theme="light"] {
+  --code-bg: #f1f3eb;
+  --code-chrome: #e4e7da;
+  --code-comment: #54614e;
+  --code-keyword: #a03420;
+  --code-string: #335e24;
+  --code-number: #794b13;
+  --code-function: #255979;
+  --code-type: #674582;
+  --code-deleted: #8e301d;
+  --code-deleted-bg: #f6dfd8;
+  --code-inserted-bg: #dfebd3;
+}
+
+.post, .page {
+  --measure: 70ch;
+  --prose-size: clamp(1rem, 1.7vw, 1.125rem);
+  --article-gutter: clamp(1rem, 5vw, 4.25rem);
+  max-width: 68rem;
+  margin-inline: auto;
+}
+
+.post .post-header, .page .post-header {
+  padding-inline: var(--article-gutter);
+  padding-top: clamp(1.1rem, 3.2vw, 2.5rem);
+  padding-bottom: clamp(1.65rem, 4.2vw, 3.25rem);
+}
+
+.post-header .back-link {
+  margin-bottom: clamp(.6rem, 2.75vw, 1.35rem);
+}
+
+.post .post-title, .page .post-title {
+  max-width: 26ch;
+  text-wrap: pretty;
+}
+
+.post-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem 1rem;
+  margin-top: 1rem;
+  color: var(--quiet);
+  font: .8125rem/1.5 var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.post-deck {
+  max-width: 66ch;
+  margin: 1.1rem 0 0;
+  color: var(--muted);
+  font-size: clamp(1.065rem, 2vw, 1.25rem);
+  text-wrap: pretty;
+}
+
+.post-content {
+  display: flow-root;
+  padding: clamp(1.5rem, 3.6vw, 2.75rem) var(--article-gutter) clamp(2rem, 5vw, 3.5rem);
+  border-top: 1px solid var(--rule);
+  font-size: var(--prose-size);
+  line-height: 1.73;
+  overflow-wrap: anywhere;
+}
+
+.post-content > * {
+  max-width: var(--measure);
+  margin-inline: 0;
+}
+
+.post-content > :first-child {
+  margin-top: 0;
+}
+
+.post-content > :last-child {
+  margin-bottom: 0;
+}
+
+.post-content h1, .post-content h2, .post-content h3, .post-content h4 {
+  margin-block: 1.85em .55em;
+  line-height: 1.22;
+  letter-spacing: -.024em;
+  text-wrap: pretty;
+}
+
+.post-content h1, .post-content h2 {
+  font-size: clamp(1.5rem, 3.2vw, 2.15rem);
+}
+
+.post-content h3 {
+  font-size: clamp(1.2rem, 2.35vw, 1.6rem);
+}
+
+.post-content p, .post-content ul, .post-content ol {
+  margin-block: .85rem;
+}
+
+.post-content ul, .post-content ol {
+  padding-inline-start: 1.5em;
+}
+
+.post-content li + li {
+  margin-top: .3em;
+}
+
+.post-content a, .cover-meta a {
+  color: var(--accent);
+}
+
+.post-content a:hover, .cover-meta a:hover {
+  color: var(--text);
+}
+
+.post-content blockquote {
+  margin-block: 1.4rem;
+  padding: .85rem 1rem;
+  border-inline-start: 1px solid var(--accent);
+  background: var(--raised);
+  color: var(--muted);
+}
+
+.post-content blockquote > :first-child {
+  margin-top: 0;
+}
+
+.post-content blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.post-content img, .post-cover img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.post-cover {
+  margin: 0 var(--article-gutter) 1.5rem;
+}
+
+.post-cover img {
+  width: 100%;
+  max-height: 20rem;
+  object-fit: cover;
+}
+
+.cover-meta {
+  color: var(--muted);
+  font-size: .875rem;
+}
+
+.post-content iframe, .post-content video {
+  max-width: 100%;
+}
+
+.post-content hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin-block: 2rem;
+}
+
+.post-content code {
+  font-family: var(--mono);
+  font-size: .88em;
+}
+
+.post-content :not(pre) > code {
+  padding: .12em .28em;
+  background: var(--raised);
+  border-radius: 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.post-content > :is(.code-panel, .highlighter-rouge, figure.highlight, pre, .table-scroll, table) {
+  max-width: none;
+}
+
+.code-panel {
+  margin-block: 1.55rem;
+  border: 1px solid var(--rule);
+  background: var(--code-bg);
+}
+
+.code-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .65rem;
+  min-height: 2.75rem;
+  padding-inline: 1rem .3rem;
+  border-bottom: 1px solid var(--rule);
+  background: var(--code-chrome);
+  color: var(--muted);
+  font: .8125rem/1.35 var(--mono);
+}
+
+.code-language, .copy-code, .scroll-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+}
+
+.code-language .icon {
+  color: var(--quiet);
+}
+
+.scroll-hint {
+  display: none;
+  color: var(--quiet);
+  font: .75rem/1.35 var(--mono);
+  white-space: nowrap;
+}
+
+.code-panel:has(pre[tabindex]) .scroll-hint {
+  display: inline-flex;
+  margin-inline-start: auto;
+}
+
+.copy-code {
+  justify-content: center;
+  min-width: 5rem;
+  min-height: 2.375rem;
+  padding: .3rem .625rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.copy-code:hover, .copy-code[data-copied="true"] {
+  border-color: var(--rule);
+  color: var(--accent);
+}
+
+.copy-code:focus-visible {
+  outline-offset: -2px;
+}
+
+.post-content pre {
+  margin: 1.55rem 0;
+  padding: clamp(.85rem, 2vw, 1.25rem);
+  overflow: auto;
+  border: 1px solid var(--rule);
+  background: var(--code-bg);
+  color: var(--text);
+  font: clamp(.8125rem, 1.45vw, .90625rem)/1.65 var(--mono);
+  overflow-wrap: normal;
+  tab-size: 4;
+}
+
+.post-content .highlight {
+  margin-inline: 0;
+}
+
+.post-content .code-panel pre {
+  margin: 0;
+  border: 0;
+}
+
+.post-content pre code {
+  font-size: inherit;
+}
+
+.code-panel pre:focus-visible, .table-scroll:focus-visible {
+  outline-offset: -2px;
+}
+
+.highlight :is(.c, .ch, .cm, .cp, .cpf, .c1, .cs) {
+  color: var(--code-comment);
+}
+
+.highlight :is(.k, .kc, .kd, .kn, .kp, .kr, .ow) {
+  color: var(--code-keyword);
+}
+
+.highlight :is(.s, .sa, .sb, .sc, .dl, .sd, .s1, .s2, .sh, .sr, .ss) {
+  color: var(--code-string);
+}
+
+.highlight :is(.m, .mb, .mf, .mh, .mi, .mo, .il, .se, .si, .sx) {
+  color: var(--code-number);
+}
+
+.highlight :is(.nf, .fm, .nb, .bp, .nd, .nt, .na) {
+  color: var(--code-function);
+}
+
+.highlight :is(.kt, .nc, .nn, .no, .ne, .nv, .vi, .vg) {
+  color: var(--code-type);
+}
+
+.highlight .gd {
+  background: var(--code-deleted-bg);
+  color: var(--code-deleted);
+}
+
+.highlight .gi {
+  background: var(--code-inserted-bg);
+  color: var(--code-string);
+}
+
+.table-scroll {
+  margin-block: 1.55rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+}
+
+.table-scroll[tabindex] > .scroll-hint {
+  position: sticky;
+  inset-inline-start: 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: .5rem .75rem;
+  border-bottom: 1px solid var(--rule);
+  background: var(--inset);
+}
+
+.post-content table {
+  display: block;
+  max-width: 100%;
+  margin-block: 1.55rem;
+  overflow-x: auto;
+  border-collapse: collapse;
+  background: var(--inset);
+  font-size: .925em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+
+.table-scroll table {
+  display: table;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.post-content :is(th, td) {
+  padding: .68rem .9rem;
+  border-bottom: 1px solid var(--rule);
+  border-inline-end: 1px solid var(--rule);
+  text-align: start;
+}
+
+.table-scroll :is(th, td):last-child {
+  border-inline-end: 0;
+}
+
+.table-scroll tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.post-content th {
+  background: var(--code-chrome);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.post-content tbody tr:nth-child(even) td {
+  background: var(--surface);
+}
+
+.post-content td > code {
+  white-space: nowrap;
+}
+
+.post-content .MathJax_Display {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.post-content .plotly-graph-div {
+  width: 100% !important;
+  max-width: min(100%, var(--measure));
+  margin-block: 1.5rem;
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  overscroll-behavior-inline: contain;
+}
+
+.screen-reader-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 38rem) {
+  .table-scroll table:has(tr:first-child > :nth-child(3)) {
+    min-width: 37rem;
+  }
+}

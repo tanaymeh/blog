@@ -1,0 +1,33 @@
+---
+layout: default
+---
+<section class="article-index" aria-labelledby="page-title">
+  {% include header.html %}
+
+  {% if site.posts.size > 0 %}
+    <ul class="article-list" role="list">
+      {% for post in site.posts %}
+        {% assign summary = post.summary | default: post.description %}
+        {% unless summary %}
+          {% assign summary = post.excerpt | strip_html | normalize_whitespace | truncate: 250 %}
+        {% endunless %}
+        <li>
+          <a class="article-row{% if forloop.first %} article-row-latest{% endif %}"
+             href="{{ post.url | relative_url }}" aria-labelledby="article-{{ forloop.index }}">
+            <div class="article-metadata">
+              <time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%b %-d, %Y' }}</time>
+              <span>{% include reading-time.html post=post %}</span>
+            </div>
+            <div class="article-copy">
+              <h2 class="article-title" id="article-{{ forloop.index }}">{{ post.title | escape }}</h2>
+              {% if summary and summary != '' %}<p class="article-description">{{ summary | escape_once }}</p>{% endif %}
+            </div>
+            <svg class="icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M3.5 10h12.75m-5-5 5 5-5 5"/></svg>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="article-empty">No posts have been published yet.</p>
+  {% endif %}
+</section>

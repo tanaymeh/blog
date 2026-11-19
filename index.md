@@ -1,4 +1,5 @@
 ---
 layout: post-list
-title: Articles
+title: Tanay’s Blog
+description: Notes on machine learning, data systems, and CUDA.
 ---
